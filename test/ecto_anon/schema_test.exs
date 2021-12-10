@@ -23,7 +23,10 @@ defmodule EctoAnon.SchemaTest do
 
   describe "__anon_fields__/0" do
     test "returns a list of {field, function} tuples" do
-      assert [{:phone, :default}, {:email, :default}] == TestUser.__anon_fields__()
+      assert [
+               {:phone, &EctoAnon.Functions.Default.run/1},
+               {:email, &EctoAnon.Functions.Default.run/1}
+             ] == TestUser.__anon_fields__()
     end
   end
 end
