@@ -5,6 +5,7 @@ defmodule EctoAnon.Repo.Migrations.CreateUsers do
     create table(:users) do
       add(:email, :string)
       add(:firstname, :string)
+      add(:lastname, :string)
     end
   end
 end

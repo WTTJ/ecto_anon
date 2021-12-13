@@ -4,23 +4,22 @@ defmodule EctoAnon.QueryTest do
   alias EctoAnon.{Repo, User}
 
   setup do
-    Repo.start_link()
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Repo)
-
-    user = %User{id: 1, email: "john@doe.com", firstname: "John"}
-
-    Repo.insert!(user)
+    user =
+      %User{email: "john@doe.com", firstname: "John", lastname: "Doe"}
+      |> Repo.insert!()
 
     {:ok, user: user}
   end
 
   describe "run/4" do
-    test "updates user in database", %{user: user} do
-      EctoAnon.Query.run([email: "redacted"], Repo, User, 1)
+    test "updates user in database with given fields", %{user: user} do
+      EctoAnon.Query.run([email: "redacted"], Repo, user)
 
-      updated_user = Repo.get(User, 1)
+      updated_user = Repo.get(User, user.id)
 
-      assert %User{id: 1, email: "redacted", firstname: "John"} = updated_user
+      assert updated_user.email == "redacted"
+      assert updated_user.firstname == user.firstname
+      assert updated_user.lastname == user.lastname
     end
   end
 end

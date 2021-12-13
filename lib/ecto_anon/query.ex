@@ -1,9 +1,9 @@
 defmodule EctoAnon.Query do
-  import Ecto.Query
-
-  @spec run(Keyword, Ecto.Repo, Module, Integer) :: nil
-  def run(data, repo, mod, id) do
-    from(m in mod, where: m.id == ^id, update: [set: ^data])
-    |> repo.update_all([])
+  @spec run(keyword(), Ecto.Repo.t(), struct()) ::
+          {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
+  def run(data, repo, struct) do
+    struct
+    |> Ecto.Changeset.change(data)
+    |> repo.update()
   end
 end

@@ -20,7 +20,7 @@ defmodule EctoAnon.AnonymizerTest do
 
   describe "anonymized_data/1" do
     test "returns the struct with anonymized fields", %{user: user} do
-      assert %{email: "redacted", phone: "redacted", age: 0} =
+      assert {:ok, [email: "redacted", phone: "redacted", age: 0]} =
                EctoAnon.Anonymizer.anonymized_data(user)
     end
   end

@@ -4,6 +4,7 @@ defmodule EctoAnon.User do
 
   schema "users" do
     anon_field(:email)
-    anon_field(:firstname)
+    field(:firstname)
+    anon_field(:lastname)
   end
 end
