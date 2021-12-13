@@ -9,7 +9,9 @@ defmodule EctoAnon.MixProject do
       version: @version,
       elixir: "~> 1.12",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      elixirc_paths: elixirc_paths(Mix.env()),
+      aliases: aliases()
     ]
   end
 
@@ -23,7 +25,18 @@ defmodule EctoAnon.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ecto, ">= 3.7.1"}
+      {:ecto, ">= 3.7.1"},
+      {:ecto_sqlite3, "~> 0.7.1", only: :test}
+    ]
+  end
+
+  def elixirc_paths(:test), do: ["lib", "test/support"]
+  def elixirc_paths(_), do: ["lib"]
+
+  defp aliases do
+    [
+      # Ensures database is reset before tests are run
+      test: ["ecto.drop", "ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
 end
