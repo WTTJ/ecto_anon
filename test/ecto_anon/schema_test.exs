@@ -10,6 +10,11 @@ defmodule EctoAnon.SchemaTest do
       field(:firstname, :string)
       anon_field(:lastname, :string)
       anon_field(:email, :string, anon_with: :anonymized_email)
+      anon_field(:phone, :string, anon_with: &__MODULE__.custom_phone/1, virtual: true)
+    end
+
+    defp custom_phone(_value) do
+      "XXX-XXX-XXX"
     end
   end
 
@@ -33,6 +38,7 @@ defmodule EctoAnon.SchemaTest do
 
     test "returns associated anon_with function otherwise default function" do
       assert [
+               {:phone, &EctoAnon.SchemaTest.CustomUser.custom_phone/1},
                {:email, &EctoAnon.Functions.AnonymizedEmail.run/1},
                {:lastname, &EctoAnon.Functions.Default.run/1}
              ] == CustomUser.__anon_fields__()
