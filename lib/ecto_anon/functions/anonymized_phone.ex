@@ -6,7 +6,5 @@ defmodule EctoAnon.Functions.AnonymizedPhone do
   @behaviour EctoAnon.Functions
 
   @impl EctoAnon.Functions
-  def run({:string, _value}) do
-    "xx xx xx xx xx"
-  end
+  def run({:string, _value}), do: "xx xx xx xx xx"
 end
