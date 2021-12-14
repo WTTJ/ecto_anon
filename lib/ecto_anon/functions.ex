@@ -3,6 +3,8 @@ defmodule EctoAnon.Functions do
   This module is in charge of the function attribution.
   """
 
+  @callback run({atom(), any()}) :: any()
+
   def get_function(atom) when is_atom(atom) do
     mod = get_module(atom)
 

@@ -2,6 +2,7 @@ defmodule EctoAnon.Functions.Default do
   @moduledoc """
   Default anonymizing functions for basic Ecto types.
   """
+  @behaviour EctoAnon.Functions
 
   @default_integer 0
   @default_float 0.0
@@ -16,6 +17,7 @@ defmodule EctoAnon.Functions.Default do
   @doc """
   Apply default anonymizing function based on field type.
   """
+  @impl EctoAnon.Functions
   def run({type, value}), do: do_run(type, value)
 
   defp do_run(:integer, _value), do: @default_integer

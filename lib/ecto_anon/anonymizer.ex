@@ -12,9 +12,14 @@ defmodule EctoAnon.Anonymizer do
     module.__anon_fields__()
     |> Enum.reduce([], fn {field, func}, acc ->
       type = module.__schema__(:type, field)
-      value = Map.get(struct, field)
 
-      Keyword.put(acc, field, func.({type, value}))
+      value =
+        case Map.get(struct, field) do
+          nil -> nil
+          value -> func.({type, value})
+        end
+
+      Keyword.put(acc, field, value)
     end)
   end
 end
