@@ -3,8 +3,8 @@ defmodule EctoAnon.User do
   use EctoAnon.Schema
 
   schema "users" do
-    field(:firstname)
-    anon_field(:lastname)
-    anon_field(:email)
+    field(:firstname, :string)
+    anon_field(:lastname, :string)
+    anon_field(:email, :string)
   end
 end

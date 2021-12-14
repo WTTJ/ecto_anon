@@ -28,7 +28,12 @@ defmodule EctoAnon.Schema do
   end
 
   def __anon_field__(mod, name, type, opts) do
-    anon_with = Keyword.get(opts, :anon_with, EctoAnon.Functions.get_function(:default))
+    anon_with =
+      case Keyword.get(opts, :anon_with) do
+        nil -> EctoAnon.Functions.get_function(:default)
+        custom_function -> EctoAnon.Functions.get_function(custom_function)
+      end
+
     ecto_opts = Keyword.delete(opts, :anon_with)
 
     Ecto.Schema.__field__(mod, name, type, ecto_opts)
