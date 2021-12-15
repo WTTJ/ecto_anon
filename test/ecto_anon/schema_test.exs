@@ -10,10 +10,10 @@ defmodule EctoAnon.SchemaTest do
       field(:firstname, :string)
       anon_field(:lastname, :string)
       anon_field(:email, :string, anon_with: :anonymized_email)
-      anon_field(:phone, :string, anon_with: &__MODULE__.custom_phone/1, virtual: true)
+      anon_field(:phone, :string, anon_with: &__MODULE__.custom_phone/3, virtual: true)
     end
 
-    defp custom_phone(_value) do
+    def custom_phone(_type, _value, _opts) do
       "XXX-XXX-XXX"
     end
   end
@@ -31,16 +31,16 @@ defmodule EctoAnon.SchemaTest do
   describe "__anon_fields__/0" do
     test "returns a list of {field, function} tuples" do
       assert [
-               {:email, &EctoAnon.Functions.Default.run/1},
-               {:lastname, &EctoAnon.Functions.Default.run/1}
+               email: {&EctoAnon.Functions.Default.run/3, []},
+               lastname: {&EctoAnon.Functions.Default.run/3, []}
              ] == User.__anon_fields__()
     end
 
     test "returns associated anon_with function otherwise default function" do
       assert [
-               {:phone, &EctoAnon.SchemaTest.CustomUser.custom_phone/1},
-               {:email, &EctoAnon.Functions.AnonymizedEmail.run/1},
-               {:lastname, &EctoAnon.Functions.Default.run/1}
+               phone: {&EctoAnon.SchemaTest.CustomUser.custom_phone/3, []},
+               email: {&EctoAnon.Functions.AnonymizedEmail.run/3, []},
+               lastname: {&EctoAnon.Functions.Default.run/3, []}
              ] == CustomUser.__anon_fields__()
     end
   end

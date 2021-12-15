@@ -6,7 +6,7 @@ defmodule EctoAnon.Functions.AnonymizedEmail do
   alias EctoAnon.Functions.Helpers
 
   @impl EctoAnon.Functions
-  def run({:string, value}) do
+  def run(:string, value, _opts) do
     ~r/(?<username>.+)@(?<domain>.+)\.(?<tld>.+)/i
     |> Regex.named_captures(value)
     |> case do

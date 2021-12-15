@@ -10,13 +10,13 @@ defmodule EctoAnon.Anonymizer do
 
   defp get_anonymized_data(%module{} = struct) do
     module.__anon_fields__()
-    |> Enum.reduce([], fn {field, func}, acc ->
+    |> Enum.reduce([], fn {field, {func, opts}}, acc ->
       type = module.__schema__(:type, field)
 
       value =
         case Map.get(struct, field) do
           nil -> nil
-          value -> func.({type, value})
+          value -> func.(type, value, opts)
         end
 
       Keyword.put(acc, field, value)

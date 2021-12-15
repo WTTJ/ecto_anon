@@ -36,7 +36,16 @@ defmodule EctoAnon.Schema do
     Module.put_attribute(mod, :anon_fields, {name, anon_with})
   end
 
-  defp anon_with(nil), do: EctoAnon.Functions.get_function(:default)
-  defp anon_with(function) when is_atom(function), do: EctoAnon.Functions.get_function(function)
-  defp anon_with(function) when is_function(function), do: function
+  defp anon_with(nil), do: {EctoAnon.Functions.get_function(:default), []}
+
+  defp anon_with(function) when is_atom(function),
+    do: {EctoAnon.Functions.get_function(function), []}
+
+  defp anon_with(function) when is_function(function), do: {function, []}
+
+  defp anon_with({function, opts}) when is_atom(function) and is_list(opts),
+    do: {EctoAnon.Functions.get_function(function), opts}
+
+  defp anon_with({function, opts}) when is_function(function) and is_list(opts),
+    do: {function, opts}
 end

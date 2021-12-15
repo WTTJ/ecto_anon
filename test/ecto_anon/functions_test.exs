@@ -15,7 +15,7 @@ defmodule EctoAnon.FunctionsTest do
 
   describe "get_function/1" do
     test "returns &EctoAnon.Functions.Default.run/1 when given :default" do
-      assert EctoAnon.Functions.get_function(:default) == (&EctoAnon.Functions.Default.run/1)
+      assert EctoAnon.Functions.get_function(:default) == (&EctoAnon.Functions.Default.run/3)
     end
   end
 end
