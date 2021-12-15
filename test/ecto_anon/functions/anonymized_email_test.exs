@@ -8,7 +8,7 @@ defmodule EctoAnon.Functions.AnonymizedEmailTest do
       assert Regex.match?(~r/.+@.+\.com/, anonymized_email)
     end
 
-    test "returns anonymized email if type is string and doesn't matches an email pattern" do
+    test "returns a fake email if type is string and doesn't matches an email pattern" do
       anonymized_email = AnonymizedEmail.run(:string, "not_an_email", [])
       assert Regex.match?(~r/.+@.+\.com/, anonymized_email)
     end
@@ -17,6 +17,11 @@ defmodule EctoAnon.Functions.AnonymizedEmailTest do
       assert_raise FunctionClauseError, ~r/^no function clause matching/, fn ->
         AnonymizedEmail.run(:binary, "john.doe@email.com", [])
       end
+    end
+
+    test "with partial option, returns a partial email" do
+      assert AnonymizedEmail.run(:string, "john.doe@email.com", partial: true) ==
+               "j******@e******.com"
     end
   end
 end
