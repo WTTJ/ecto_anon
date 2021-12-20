@@ -2,7 +2,7 @@ defmodule EctoAnon.Functions.AnonymizedEmailTest do
   use ExUnit.Case, async: true
   alias EctoAnon.Functions.AnonymizedEmail
 
-  describe "run/1" do
+  describe "run/3" do
     test "returns anonymized email if type is string and matches an email pattern" do
       anonymized_email = AnonymizedEmail.run(:string, "john.doe@email.com", [])
       assert Regex.match?(~r/.+@.+\.com/, anonymized_email)
