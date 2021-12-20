@@ -22,7 +22,7 @@ defmodule EctoAnon.Functions.DefaultTest do
     test "returns fixed value type when appropriate" do
       matches =
         Enum.map(@fixed_value_types, fn {type, value} ->
-          EctoAnon.Functions.Default.run({type, "value"}) == value
+          EctoAnon.Functions.Default.run(type, "value", []) == value
         end)
 
       assert Enum.all?(matches)
@@ -31,7 +31,7 @@ defmodule EctoAnon.Functions.DefaultTest do
     test "returns the same value when appropriate" do
       matches =
         Enum.map(@same_value_types, fn type ->
-          EctoAnon.Functions.Default.run({type, "value"}) == "value"
+          EctoAnon.Functions.Default.run(type, "value", []) == "value"
         end)
 
       assert Enum.all?(matches)

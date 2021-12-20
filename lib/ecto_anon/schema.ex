@@ -28,11 +28,24 @@ defmodule EctoAnon.Schema do
   end
 
   def __anon_field__(mod, name, type, opts) do
-    anon_with = Keyword.get(opts, :anon_with, EctoAnon.Functions.get_function(:default))
+    anon_with = Keyword.get(opts, :anon_with) |> anon_with()
     ecto_opts = Keyword.delete(opts, :anon_with)
 
     Ecto.Schema.__field__(mod, name, type, ecto_opts)
 
     Module.put_attribute(mod, :anon_fields, {name, anon_with})
   end
+
+  defp anon_with(nil), do: {EctoAnon.Functions.get_function(:default), []}
+
+  defp anon_with(function) when is_atom(function),
+    do: {EctoAnon.Functions.get_function(function), []}
+
+  defp anon_with(function) when is_function(function), do: {function, []}
+
+  defp anon_with({function, opts}) when is_atom(function) and is_list(opts),
+    do: {EctoAnon.Functions.get_function(function), opts}
+
+  defp anon_with({function, opts}) when is_function(function) and is_list(opts),
+    do: {function, opts}
 end
