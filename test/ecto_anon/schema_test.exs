@@ -20,7 +20,7 @@ defmodule EctoAnon.SchemaTest do
 
   describe "using/1" do
     test "delegates to Ecto.Schema.__field__ to define a standard Ecto field on the schema" do
-      assert User.__schema__(:fields) == [:id, :firstname, :lastname, :email]
+      assert User.__schema__(:fields) == [:id, :firstname, :lastname, :email, :last_sign_in_at]
     end
 
     test "defines an __anon_fields__ function on the using module" do
@@ -31,6 +31,7 @@ defmodule EctoAnon.SchemaTest do
   describe "__anon_fields__/0" do
     test "returns a list of {field, function} tuples" do
       assert [
+               {:last_sign_in_at, {&EctoAnon.Functions.AnonymizedDate.run/3, [:only_year]}},
                email: {&EctoAnon.Functions.Default.run/3, []},
                lastname: {&EctoAnon.Functions.Default.run/3, []}
              ] == User.__anon_fields__()

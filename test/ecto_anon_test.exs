@@ -9,7 +9,12 @@ defmodule EctoAnonTest do
   describe "run/3" do
     setup do
       user =
-        %User{email: "john.doe@email.com", firstname: "John", lastname: "Doe"}
+        %User{
+          email: "john.doe@email.com",
+          firstname: "John",
+          lastname: "Doe",
+          last_sign_in_at: ~U[2022-05-04 00:00:00Z]
+        }
         |> Repo.insert!()
 
       {:ok, user: user}
@@ -21,6 +26,7 @@ defmodule EctoAnonTest do
       assert updated_user.email == "redacted"
       assert updated_user.firstname == "John"
       assert updated_user.lastname == "redacted"
+      assert updated_user.last_sign_in_at == ~U[2022-01-01 00:00:00Z]
     end
 
     test "with non-ecto struct, should return an error" do
