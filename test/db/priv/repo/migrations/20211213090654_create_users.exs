@@ -6,6 +6,7 @@ defmodule EctoAnon.Repo.Migrations.CreateUsers do
       add(:email, :string)
       add(:firstname, :string)
       add(:lastname, :string)
+      add(:last_sign_in_at, :utc_datetime)
     end
   end
 end
