@@ -5,6 +5,7 @@ defmodule EctoAnon do
 
   @doc """
   Updates an Ecto struct with anonymized data based on its anon_fields declared in the struct schema.
+
       defmodule User do
         use Ecto.Schema
         use EctoAnon
@@ -15,7 +16,13 @@ defmodule EctoAnon do
         end
       end
 
-  It returns {:ok, struct} if the struct has been successfully updated or {:error, :non_anonymizable_struct} if the struct has no anonymizable fields.
+  It returns `{:ok, struct}` if the struct has been successfully updated or `{:error, :non_anonymizable_struct}` if the struct has no anonymizable fields.
+
+  ## Options
+
+    * `:cascade` - When set to `true`, allows ecto-anon to preload and anonymize
+    all associations (and associations of these associations) automatically in cascade.
+    Could be used to anonymize all data related a struct in a single call.
 
   ## Example
 
@@ -41,10 +48,34 @@ defmodule EctoAnon do
   """
   @spec run(struct(), Ecto.Repo.t(), keyword()) ::
           {:ok, Ecto.Schema.t()} | {:error, :non_anonymizable_struct}
-  def run(struct, repo, _opts \\ []) do
+
+  def run(struct, repo, _opts \\ [])
+
+  def run(struct, _repo, _opts) when struct in [[], nil], do: {:error, :non_anonymizable_struct}
+  def run(struct, repo, opts) when is_list(struct), do: Enum.each(struct, &run(&1, repo, opts))
+
+  def run(%mod{} = struct, repo, cascade: true) do
+    associations = mod.__schema__(:associations)
+    struct = repo.preload(struct, associations)
+
+    associations
+    |> Enum.filter(&is_children?(mod, &1))
+    |> Enum.each(&run(Map.get(struct, &1), repo, cascade: true))
+
+    run(struct, repo)
+  end
+
+  def run(struct, repo, _opts) do
     case EctoAnon.Anonymizer.anonymized_data(struct) do
       {:ok, data} -> EctoAnon.Query.run(data, repo, struct)
       {:error, error} -> {:error, error}
     end
+  end
+
+  defp is_children?(mod, association) do
+    mod.__schema__(:association, association).__struct__ in [
+      Ecto.Association.Has,
+      Ecto.Association.ManyToMany
+    ]
   end
 end
