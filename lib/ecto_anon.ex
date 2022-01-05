@@ -101,7 +101,8 @@ defmodule EctoAnon do
   defp is_children?(mod, association) do
     mod.__schema__(:association, association).__struct__ in [
       Ecto.Association.Has,
-      Ecto.Association.ManyToMany
+      Ecto.Association.ManyToMany,
+      Ecto.Association.HasThrough
     ]
   end
 end
