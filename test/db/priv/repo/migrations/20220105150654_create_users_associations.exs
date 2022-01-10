@@ -6,6 +6,7 @@ defmodule EctoAnon.Repo.Migrations.CreateUsersAssociations do
     create table(:comments) do
       add(:content, :string)
       add(:tag, :string)
+      add(:quote, :map)
       add(:author_id, references(:users))
 
       anonymized()

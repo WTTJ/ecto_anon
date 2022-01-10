@@ -27,6 +27,7 @@ defmodule EctoAnon.MixProject do
     [
       {:ecto, ">= 3.7.1"},
       {:ecto_sqlite3, "~> 0.7.1", only: :test},
+      {:jason, "~> 1.3", only: :test},
       {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false}
     ]
   end

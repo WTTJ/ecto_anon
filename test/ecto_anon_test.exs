@@ -1,6 +1,6 @@
 defmodule EctoAnonTest do
   use ExUnit.Case, async: true
-  alias EctoAnon.{Repo, User, Comment}
+  alias EctoAnon.{Repo, User, Comment, Comment.Quote}
 
   defmodule UnknownStruct do
     defstruct name: "John", age: 27
@@ -48,12 +48,16 @@ defmodule EctoAnonTest do
         }
         |> Repo.insert!()
 
-      %Comment{
-        content: "this is a comment",
-        tag: "tag",
-        author_id: user.id
-      }
-      |> Repo.insert!()
+      comment =
+        %Comment{
+          content: "this is a comment",
+          tag: "tag",
+          author_id: user.id,
+          quote: %Quote{
+            quote: "this is a quote"
+          }
+        }
+        |> Repo.insert!()
 
       {:ok, user: user, mick: mick, emilie: emilie}
     end
@@ -76,8 +80,19 @@ defmodule EctoAnonTest do
       mick: mick,
       emilie: emilie
     } do
+      comment =
+        %Comment{
+          content: "this is a comment",
+          tag: "tag",
+          author_id: user.id,
+          quote: %Quote{
+            quote: "this is a quote"
+          }
+        }
+        |> Repo.insert!()
+
       assert {:ok, updated_user} =
-               Repo.get(User, user.id)
+               Repo.get(Comment, comment.id)
                |> EctoAnon.run(Repo, cascade: true)
 
       assert %User{
@@ -89,7 +104,10 @@ defmodule EctoAnonTest do
 
       %Comment{
         content: "this is a comment",
-        tag: "tag"
+        tag: "tag",
+        quote: %Quote{
+          quote: "redacted"
+        }
       } = Repo.get_by(Comment, author_id: user.id)
 
       %User{

@@ -85,7 +85,7 @@ defmodule EctoAnon do
     anon_fields = mod.__anon_fields__() |> Enum.map(fn {field, _} -> field end)
 
     associations =
-      mod.__schema__(:associations)
+      (mod.__schema__(:associations) ++ mod.__schema__(:embeds))
       |> Enum.filter(&(&1 in anon_fields and EctoAnon.Anonymizer.is_association?(mod, &1)))
 
     struct = repo.preload(struct, associations)
