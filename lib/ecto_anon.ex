@@ -40,7 +40,7 @@ defmodule EctoAnon do
     * `:cascade` - When set to `true`, allows ecto-anon to preload and anonymize
     all associations (and associations of these associations) automatically in cascade.
     Could be used to anonymize all data related a struct in a single call.
-  >>>>>>> feat: added cascade option
+    Note that this won't traverse `belongs_to` associations.
 
   ## Example
 
@@ -96,13 +96,5 @@ defmodule EctoAnon do
       {:ok, data} -> EctoAnon.Query.run(data, repo, struct)
       {:error, error} -> {:error, error}
     end
-  end
-
-  defp is_children?(mod, association) do
-    mod.__schema__(:association, association).__struct__ in [
-      Ecto.Association.Has,
-      Ecto.Association.ManyToMany,
-      Ecto.Association.HasThrough
-    ]
   end
 end
