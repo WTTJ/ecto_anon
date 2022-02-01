@@ -9,9 +9,9 @@ defmodule EctoAnon.Functions.DefaultTest do
     decimal: Decimal.new("0.0"),
     date: ~D[1970-01-01],
     utc_datetime: ~U[1970-01-01 00:00:00Z],
-    utc_datetime_usec: ~U[1970-01-01 00:00:00Z],
+    utc_datetime_usec: ~U[1970-01-01 00:00:00.000Z],
     naive_datetime: ~N[1970-01-01 00:00:00],
-    naive_datetime_usec: ~N[1970-01-01 00:00:00],
+    naive_datetime_usec: ~N[1970-01-01 00:00:00.000],
     time: ~T[00:00:00.000],
     time_usec: ~T[00:00:00.000]
   ]
