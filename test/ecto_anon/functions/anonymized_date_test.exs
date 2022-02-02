@@ -8,11 +8,11 @@ defmodule EctoAnon.Functions.AnonymizedDateTest do
 
       assert AnonymizedDate.run(:date, date, []) == ~D[1970-01-01]
       assert AnonymizedDate.run(:utc_datetime, date, []) == ~U[1970-01-01 00:00:00Z]
-      assert AnonymizedDate.run(:utc_datetime_usec, date, []) == ~U[1970-01-01 00:00:00.000Z]
+      assert AnonymizedDate.run(:utc_datetime_usec, date, []) == ~U[1970-01-01 00:00:00.000000Z]
       assert AnonymizedDate.run(:naive_datetime, date, []) == ~N[1970-01-01 00:00:00]
 
       assert AnonymizedDate.run(:naive_datetime_usec, date, []) ==
-               ~N[1970-01-01 00:00:00.000]
+               ~N[1970-01-01 00:00:00.000000]
     end
 
     test "when opts is [:only_year] it returns the date at the beginning of the date's year" do
@@ -22,12 +22,12 @@ defmodule EctoAnon.Functions.AnonymizedDateTest do
       assert AnonymizedDate.run(:utc_datetime, date, [:only_year]) == ~U[2019-01-01 00:00:00Z]
 
       assert AnonymizedDate.run(:utc_datetime_usec, date, [:only_year]) ==
-               ~U[2019-01-01 00:00:00.000Z]
+               ~U[2019-01-01 00:00:00.000000Z]
 
       assert AnonymizedDate.run(:naive_datetime, date, [:only_year]) == ~N[2019-01-01 00:00:00]
 
       assert AnonymizedDate.run(:naive_datetime_usec, date, [:only_year]) ==
-               ~N[2019-01-01 00:00:00.000]
+               ~N[2019-01-01 00:00:00.000000]
     end
   end
 end
