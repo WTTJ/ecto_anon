@@ -19,10 +19,10 @@ defmodule EctoAnon.Functions.AnonymizedDate do
     do: DateTime.new!(Date.new!(value.year, 01, 01), ~T[00:00:00])
 
   defp do_run(:utc_datetime_usec, value, _opts),
-    do: DateTime.new!(Date.new!(value.year, 01, 01), ~T[00:00:00.000])
+    do: DateTime.new!(Date.new!(value.year, 01, 01), ~T[00:00:00.000000])
 
   defp do_run(:naive_datetime, value, _opts), do: NaiveDateTime.new!(value.year, 1, 1, 0, 0, 0)
 
   defp do_run(:naive_datetime_usec, value, _opts),
-    do: NaiveDateTime.new!(value.year, 1, 1, 0, 0, 0, {0, 3})
+    do: NaiveDateTime.new!(value.year, 1, 1, 0, 0, 0, {0, 6})
 end

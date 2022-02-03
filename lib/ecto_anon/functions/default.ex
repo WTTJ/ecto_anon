@@ -11,11 +11,11 @@ defmodule EctoAnon.Functions.Default do
   @default_decimal Decimal.new("0.0")
   @default_date ~D[1970-01-01]
   @default_datetime ~U[1970-01-01 00:00:00Z]
-  @default_datetime_usec ~U[1970-01-01 00:00:00.000Z]
+  @default_datetime_usec ~U[1970-01-01 00:00:00.000000Z]
   @default_naive_datetime ~N[1970-01-01 00:00:00]
-  @default_naive_datetime_usec ~N[1970-01-01 00:00:00.000]
-  @default_time ~T[00:00:00.000]
-  @default_time_usec ~T[00:00:00.000]
+  @default_naive_datetime_usec ~N[1970-01-01 00:00:00.000000]
+  @default_time ~T[00:00:00]
+  @default_time_usec ~T[00:00:00.000000]
 
   @doc """
   Apply default anonymizing function based on field type.
