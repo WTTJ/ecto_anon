@@ -1,4 +1,4 @@
-defmodule EctoAnon.Functions.RandomUUID do
+defmodule EctoAnon.Functions.RandomUuid do
   @moduledoc """
   Genererates a random uuid version 4
   """
