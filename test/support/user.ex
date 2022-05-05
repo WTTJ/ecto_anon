@@ -13,20 +13,20 @@ defmodule EctoAnon.User do
     has_many(:comments, Comment, foreign_key: :author_id, references: :id)
 
     many_to_many(
-      :relationships,
+      :followers,
       __MODULE__,
-      join_through: EctoAnon.User.Relationship,
-      join_keys: [person_id: :id, relation_id: :id]
+      join_through: EctoAnon.User.Follower,
+      join_keys: [follower_id: :id, followee_id: :id]
     )
   end
 end
 
-defmodule EctoAnon.User.Relationship do
+defmodule EctoAnon.User.Follower do
   use Ecto.Schema
 
-  schema "relationships" do
-    field(:person_id, :id)
-    field(:relation_id, :id)
+  schema "followers" do
+    field(:follower_id, :id)
+    field(:followee_id, :id)
     timestamps()
   end
 end

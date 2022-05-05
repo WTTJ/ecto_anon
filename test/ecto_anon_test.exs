@@ -14,7 +14,7 @@ defmodule EctoAnonTest do
           firstname: "Mick",
           lastname: "Rogers",
           last_sign_in_at: ~U[2021-01-03 00:00:00Z],
-          relationships: []
+          followers: []
         }
         |> Repo.insert!()
 
@@ -24,7 +24,7 @@ defmodule EctoAnonTest do
           firstname: "Fred",
           lastname: "Duncan",
           last_sign_in_at: ~U[2023-03-20 00:00:00Z],
-          relationships: []
+          followers: []
         }
         |> Repo.insert!()
 
@@ -34,7 +34,7 @@ defmodule EctoAnonTest do
           firstname: "Emilie",
           lastname: "Duncan",
           last_sign_in_at: ~U[2018-09-04 00:00:00Z],
-          relationships: [fred]
+          followers: [fred]
         }
         |> Repo.insert!()
 
@@ -44,7 +44,7 @@ defmodule EctoAnonTest do
           firstname: "John",
           lastname: "Doe",
           last_sign_in_at: ~U[2022-05-04 00:00:00Z],
-          relationships: [mick, emilie]
+          followers: [mick, emilie]
         }
         |> Repo.insert!()
 
@@ -97,15 +97,15 @@ defmodule EctoAnonTest do
         firstname: "Mick",
         last_sign_in_at: ~U[2021-01-01 00:00:00Z],
         lastname: "redacted",
-        relationships: []
-      } = Repo.get(User, mick.id) |> Repo.preload(:relationships)
+        followers: []
+      } = Repo.get(User, mick.id) |> Repo.preload(:followers)
 
       %User{
         email: "redacted",
         firstname: "Emilie",
         last_sign_in_at: ~U[2018-01-01 00:00:00Z],
         lastname: "redacted",
-        relationships: [
+        followers: [
           %User{
             email: "redacted",
             firstname: "Fred",
@@ -113,7 +113,7 @@ defmodule EctoAnonTest do
             lastname: "redacted"
           }
         ]
-      } = Repo.get(User, emilie.id) |> Repo.preload(:relationships)
+      } = Repo.get(User, emilie.id) |> Repo.preload(:followers)
     end
   end
 end

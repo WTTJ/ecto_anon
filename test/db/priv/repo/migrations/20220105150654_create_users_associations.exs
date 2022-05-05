@@ -8,9 +8,9 @@ defmodule EctoAnon.Repo.Migrations.CreateUsersAssociations do
       add(:author_id, references(:users))
     end
 
-    create table(:relationships) do
-      add(:person_id, references(:users))
-      add(:relation_id, references(:users))
+    create table(:followers) do
+      add(:follower_id, references(:users))
+      add(:followee_id, references(:users))
       timestamps()
     end
   end
