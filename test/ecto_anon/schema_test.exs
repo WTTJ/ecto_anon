@@ -38,6 +38,7 @@ defmodule EctoAnon.SchemaTest do
     test "returns a list of {field, function} tuples" do
       assert [
                {:last_sign_in_at, {&EctoAnon.Functions.AnonymizedDate.run/3, [:only_year]}},
+               {:followers, {&EctoAnon.Functions.Default.run/3, []}},
                email: {&EctoAnon.Functions.Default.run/3, []},
                lastname: {&EctoAnon.Functions.Default.run/3, []}
              ] == User.__anon_fields__()

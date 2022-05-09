@@ -7,6 +7,7 @@ defmodule EctoAnon.User do
   anon_config([
     :lastname,
     :email,
+    :followers,
     last_sign_in_at: [with: [anonymized_date: :only_year]]
   ])
 

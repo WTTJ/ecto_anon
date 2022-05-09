@@ -10,6 +10,7 @@ defmodule EctoAnon.Anonymizer do
 
   defp get_anonymized_data(%module{} = struct) do
     module.__anon_fields__()
+    |> Enum.reject(fn {field, _} -> is_association?(module, field) end)
     |> Enum.reduce([], fn {field, {func, opts}}, acc ->
       type = module.__schema__(:type, field)
 
@@ -21,5 +22,18 @@ defmodule EctoAnon.Anonymizer do
 
       Keyword.put(acc, field, value)
     end)
+  end
+
+  def is_association?(mod, association) do
+    with association <- mod.__schema__(:association, association),
+         false <- is_nil(association) do
+      association.__struct__ in [
+        Ecto.Association.Has,
+        Ecto.Association.ManyToMany,
+        Ecto.Association.HasThrough
+      ]
+    else
+      _ -> false
+    end
   end
 end

@@ -37,43 +37,15 @@ defmodule EctoAnon.Schema do
     do: {field, {function, []}}
 
   defp anon_with({field, opts}) when is_atom(field) and is_list(opts) do
-    [{function, params}] = Keyword.get(opts, :with)
+    case Keyword.get(opts, :with) do
+      nil ->
+        {field, opts}
 
-    if is_atom(function) do
-      {field, {EctoAnon.Functions.get_function(function), [params]}}
-    else
-      {field, {function, [params]}}
+      [{function, params}] when is_atom(function) ->
+        {field, {EctoAnon.Functions.get_function(function), [params]}}
+
+      [{function, params}] ->
+        {field, {function, [params]}}
     end
   end
-
-  @doc """
-  Define an anonymizable field in your Ecto schema. Use it as a replacement of Ecto.Schema.field/3
-  """
-  # defmacro anon_field(name, type \\ :string, opts \\ []) do
-  #   quote do
-  #     EctoAnon.Schema.__anon_field__(__MODULE__, unquote(name), unquote(type), unquote(opts))
-  #   end
-  # end
-
-  # defp __anon_field__(mod, name, type, opts) do
-  #   anon_with = Keyword.get(opts, :anon_with) |> anon_with()
-  #   ecto_opts = Keyword.delete(opts, :anon_with)
-
-  #   Ecto.Schema.__field__(mod, name, type, ecto_opts)
-
-  #   Module.put_attribute(mod, :anon_fields, {name, anon_with})
-  # end
-
-  # defp anon_with(nil), do: {EctoAnon.Functions.get_function(:default), []}
-
-  # defp anon_with(function) when is_atom(function),
-  #   do: {EctoAnon.Functions.get_function(function), []}
-
-  # defp anon_with(function) when is_function(function), do: {function, []}
-
-  # defp anon_with({function, opts}) when is_atom(function) and is_list(opts),
-  #   do: {EctoAnon.Functions.get_function(function), opts}
-
-  # defp anon_with({function, opts}) when is_function(function) and is_list(opts),
-  #   do: {function, opts}
 end

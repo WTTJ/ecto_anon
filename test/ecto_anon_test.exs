@@ -88,7 +88,7 @@ defmodule EctoAnonTest do
              } = updated_user
 
       %Comment{
-        content: "redacted",
+        content: "this is a comment",
         tag: "tag"
       } = Repo.get_by(Comment, author_id: user.id)
 

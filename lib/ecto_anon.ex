@@ -56,11 +56,15 @@ defmodule EctoAnon do
   def run(struct, repo, opts) when is_list(struct), do: Enum.each(struct, &run(&1, repo, opts))
 
   def run(%mod{} = struct, repo, cascade: true) do
-    associations = mod.__schema__(:associations)
+    anon_fields = mod.__anon_fields__() |> Enum.map(fn {field, _} -> field end)
+
+    associations =
+      mod.__schema__(:associations)
+      |> Enum.filter(&(&1 in anon_fields and EctoAnon.Anonymizer.is_association?(mod, &1)))
+
     struct = repo.preload(struct, associations)
 
     associations
-    |> Enum.filter(&is_children?(mod, &1))
     |> Enum.each(&run(Map.get(struct, &1), repo, cascade: true))
 
     run(struct, repo)
@@ -71,13 +75,5 @@ defmodule EctoAnon do
       {:ok, data} -> EctoAnon.Query.run(data, repo, struct)
       {:error, error} -> {:error, error}
     end
-  end
-
-  defp is_children?(mod, association) do
-    mod.__schema__(:association, association).__struct__ in [
-      Ecto.Association.Has,
-      Ecto.Association.ManyToMany,
-      Ecto.Association.HasThrough
-    ]
   end
 end
