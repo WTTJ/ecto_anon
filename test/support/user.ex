@@ -4,7 +4,7 @@ defmodule EctoAnon.User do
 
   alias EctoAnon.Comment
 
-  anon_config([
+  anon_schema([
     :lastname,
     :email,
     :followers,

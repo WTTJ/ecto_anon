@@ -16,13 +16,13 @@ defmodule EctoAnon.Schema do
     end
   end
 
-  defmacro anon_config(fields_config) do
+  defmacro anon_schema(fields_config) do
     quote do
-      EctoAnon.Schema.__anon_config__(__MODULE__, unquote(fields_config))
+      EctoAnon.Schema.__anon_schema__(__MODULE__, unquote(fields_config))
     end
   end
 
-  def __anon_config__(mod, fields_config) do
+  def __anon_schema__(mod, fields_config) do
     fields_config
     |> Enum.each(&Module.put_attribute(mod, :anon_fields, anon_with(&1)))
   end

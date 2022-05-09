@@ -4,7 +4,7 @@ defmodule EctoAnon.Comment do
 
   alias EctoAnon.User
 
-  anon_config([
+  anon_schema([
     :content
   ])
 

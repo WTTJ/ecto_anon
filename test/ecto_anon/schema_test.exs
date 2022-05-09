@@ -6,7 +6,7 @@ defmodule EctoAnon.SchemaTest do
     use Ecto.Schema
     use EctoAnon.Schema
 
-    anon_config([
+    anon_schema([
       :lastname,
       email: :anonymized_email,
       phone: &__MODULE__.custom_phone/3
@@ -37,8 +37,8 @@ defmodule EctoAnon.SchemaTest do
   describe "__anon_fields__/0" do
     test "returns a list of {field, function} tuples" do
       assert [
-               {:last_sign_in_at, {&EctoAnon.Functions.AnonymizedDate.run/3, [:only_year]}},
-               {:followers, {&EctoAnon.Functions.Default.run/3, []}},
+               last_sign_in_at: {&EctoAnon.Functions.AnonymizedDate.run/3, [:only_year]},
+               followers: {&EctoAnon.Functions.Default.run/3, []},
                email: {&EctoAnon.Functions.Default.run/3, []},
                lastname: {&EctoAnon.Functions.Default.run/3, []}
              ] == User.__anon_fields__()
