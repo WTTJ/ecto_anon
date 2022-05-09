@@ -4,8 +4,12 @@ defmodule EctoAnon.Comment do
 
   alias EctoAnon.User
 
+  anon_config([
+    :content
+  ])
+
   schema "comments" do
-    anon_field(:content, :string)
+    field(:content, :string)
     field(:tag, :string)
     belongs_to(:users, User, foreign_key: :author_id)
   end

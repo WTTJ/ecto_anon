@@ -6,11 +6,17 @@ defmodule EctoAnon.SchemaTest do
     use Ecto.Schema
     use EctoAnon.Schema
 
+    anon_config([
+      :lastname,
+      email: :anonymized_email,
+      phone: &__MODULE__.custom_phone/3
+    ])
+
     schema "users" do
       field(:firstname, :string)
-      anon_field(:lastname, :string)
-      anon_field(:email, :string, anon_with: :anonymized_email)
-      anon_field(:phone, :string, anon_with: &__MODULE__.custom_phone/3, virtual: true)
+      field(:lastname, :string)
+      field(:email, :string)
+      field(:phone, :string, virtual: true)
     end
 
     def custom_phone(_type, _value, _opts) do
