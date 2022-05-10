@@ -8,11 +8,22 @@ defmodule EctoAnon do
 
       defmodule User do
         use Ecto.Schema
-        use EctoAnon
+        use EctoAnon.Schema
+
+        anon_schema [
+          :firstname,
+          email: &__MODULE__.anonymized_email/3
+          birthdate: [:anonymized_date, options: [:only_year]]
+        ]
 
         schema "user" do
-          # ... fields ...
-          anon_field :email, :string
+          field :fistname, :string
+          field :email, :string
+          field :birthdate, :utc_datetime
+        end
+
+        def anonymized_email(_type, _value, _opts) do
+          "xxx@xxx.com"
         end
       end
 
@@ -29,12 +40,16 @@ defmodule EctoAnon do
 
       defmodule User do
         use Ecto.Schema
-        use EctoAnon
+        use EctoAnon.Schema
+
+        anon_schema [
+          :email
+        ]
 
         schema "users" do
           field :name, :string
           field :age, :integer, default: 0
-          anon_field :email, :string
+          field :email, :string
         end
       end
 

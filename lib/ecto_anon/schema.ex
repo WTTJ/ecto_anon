@@ -36,16 +36,19 @@ defmodule EctoAnon.Schema do
   defp anon_with({field, function}) when is_atom(field) and is_function(function),
     do: {field, {function, []}}
 
-  defp anon_with({field, opts}) when is_atom(field) and is_list(opts) do
-    case Keyword.get(opts, :with) do
-      nil ->
-        {field, opts}
+  defp anon_with({field, [function | opts]}) when is_atom(field) do
+    function =
+      cond do
+        is_atom(function) -> EctoAnon.Functions.get_function(function)
+        is_function(function) -> function
+      end
 
-      [{function, params}] when is_atom(function) ->
-        {field, {EctoAnon.Functions.get_function(function), [params]}}
+    params =
+      case Keyword.get(opts, :options) do
+        options when options in [nil, []] -> []
+        options -> options
+      end
 
-      [{function, params}] ->
-        {field, {function, [params]}}
-    end
+    {field, {function, params}}
   end
 end

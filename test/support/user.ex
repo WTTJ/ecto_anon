@@ -8,7 +8,7 @@ defmodule EctoAnon.User do
     :lastname,
     :email,
     :followers,
-    last_sign_in_at: [with: [anonymized_date: :only_year]]
+    last_sign_in_at: [:anonymized_date, options: [:only_year]]
   ])
 
   schema "users" do
