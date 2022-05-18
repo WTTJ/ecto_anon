@@ -11,9 +11,9 @@ defmodule EctoAnon.QueryTest do
     {:ok, user: user}
   end
 
-  describe "run/3" do
+  describe "apply/3" do
     test "updates user in database with given fields", %{user: user} do
-      EctoAnon.Query.run([email: "redacted"], Repo, user)
+      EctoAnon.Query.apply([email: "redacted"], Repo, user)
 
       updated_user = Repo.get(User, user.id)
 

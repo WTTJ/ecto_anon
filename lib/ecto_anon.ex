@@ -98,7 +98,7 @@ defmodule EctoAnon do
 
   def run(struct, repo, opts) do
     with {:ok, data} <- EctoAnon.Anonymizer.anonymized_data(struct),
-         {:ok, anonymized_data} <- EctoAnon.Query.run(data, repo, struct) do
+         {:ok, anonymized_data} <- EctoAnon.Query.apply(data, repo, struct) do
       if set_anonymized?(struct, opts) do
         EctoAnon.Query.set_anonymized(repo, struct)
       else
