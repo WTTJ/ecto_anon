@@ -24,7 +24,7 @@ defmodule EctoAnon.Schema do
 
   defmacro anonymized do
     quote do
-      field(:anonymized, :boolean)
+      field(:anonymized, :boolean, default: false)
     end
   end
 
