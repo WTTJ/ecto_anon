@@ -41,6 +41,11 @@ defmodule EctoAnon do
     all associations (and associations of these associations) automatically in cascade.
     Could be used to anonymize all data related a struct in a single call.
     Note that this won't traverse `belongs_to` associations.
+    Default: false
+
+    * `:log`- When set to `true`, it will set `anonymized` field when EctoAnon.run
+    applies anonymization on a ressource.
+    Default: true
 
   ## Example
 
@@ -91,10 +96,20 @@ defmodule EctoAnon do
     run(struct, repo)
   end
 
-  def run(struct, repo, _opts) do
-    case EctoAnon.Anonymizer.anonymized_data(struct) do
-      {:ok, data} -> EctoAnon.Query.run(data, repo, struct)
+  def run(struct, repo, opts) do
+    with {:ok, data} <- EctoAnon.Anonymizer.anonymized_data(struct),
+         {:ok, anonymized_data} <- EctoAnon.Query.run(data, repo, struct) do
+      if set_anonymized?(struct, opts) do
+        EctoAnon.Query.set_anonymized(repo, struct)
+      else
+        {:ok, anonymized_data}
+      end
+    else
       {:error, error} -> {:error, error}
     end
+  end
+
+  defp set_anonymized?(%mod{} = _struct, opts) do
+    Keyword.get(opts, :log, false) and mod.__schema__(:fields) |> Map.get(:anonymized)
   end
 end

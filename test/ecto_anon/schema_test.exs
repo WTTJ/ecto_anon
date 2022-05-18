@@ -17,6 +17,8 @@ defmodule EctoAnon.SchemaTest do
       field(:lastname, :string)
       field(:email, :string)
       field(:phone, :string, virtual: true)
+
+      anonymized()
     end
 
     def custom_phone(_type, _value, _opts) do
@@ -26,11 +28,22 @@ defmodule EctoAnon.SchemaTest do
 
   describe "using/1" do
     test "delegates to Ecto.Schema.__field__ to define a standard Ecto field on the schema" do
-      assert User.__schema__(:fields) == [:id, :firstname, :lastname, :email, :last_sign_in_at]
+      assert User.__schema__(:fields) == [
+               :id,
+               :firstname,
+               :lastname,
+               :email,
+               :last_sign_in_at,
+               :anonymized
+             ]
     end
 
     test "defines an __anon_fields__ function on the using module" do
       assert Enum.find(User.__info__(:functions), &(&1 == {:__anon_fields__, 0}))
+    end
+
+    test "defines an anonymized macro returning a boolean anonymized field" do
+      assert User.__schema__(:type, :anonymized) == :boolean
     end
   end
 
