@@ -100,7 +100,7 @@ defmodule EctoAnon do
     with {:ok, data} <- EctoAnon.Anonymizer.anonymized_data(struct),
          {:ok, anonymized_data} <- EctoAnon.Query.apply(data, repo, struct) do
       if set_anonymized?(struct, opts) do
-        EctoAnon.Query.set_anonymized(repo, struct)
+        EctoAnon.Query.set_anonymized(repo, anonymized_data)
       else
         {:ok, anonymized_data}
       end
@@ -110,6 +110,6 @@ defmodule EctoAnon do
   end
 
   defp set_anonymized?(%mod{} = _struct, opts) do
-    Keyword.get(opts, :log, false) and mod.__schema__(:fields) |> Map.get(:anonymized)
+    Keyword.get(opts, :log, true) and :anonymized in mod.__schema__(:fields)
   end
 end
