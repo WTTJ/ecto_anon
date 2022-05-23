@@ -1,11 +1,14 @@
 defmodule EctoAnon.Repo.Migrations.CreateUsersAssociations do
   use Ecto.Migration
+  import EctoAnon.Migration
 
   def change do
     create table(:comments) do
       add(:content, :string)
       add(:tag, :string)
       add(:author_id, references(:users))
+
+      anonymized()
     end
 
     create table(:followers) do

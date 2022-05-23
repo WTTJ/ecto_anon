@@ -25,6 +25,8 @@ defmodule EctoAnon.User do
       join_through: EctoAnon.User.Follower,
       join_keys: [follower_id: :id, followee_id: :id]
     )
+
+    anonymized()
   end
 end
 

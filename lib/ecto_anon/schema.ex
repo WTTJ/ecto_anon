@@ -22,6 +22,12 @@ defmodule EctoAnon.Schema do
     end
   end
 
+  defmacro anonymized do
+    quote do
+      field(:anonymized, :boolean, default: false)
+    end
+  end
+
   def __anon_schema__(mod, fields_config) do
     fields_config
     |> Enum.each(&Module.put_attribute(mod, :anon_fields, anon_with(&1)))
