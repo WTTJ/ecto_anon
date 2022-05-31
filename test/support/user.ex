@@ -8,6 +8,8 @@ defmodule EctoAnon.User do
     :lastname,
     :email,
     :followers,
+    :favorite_quote,
+    :quotes,
     last_sign_in_at: [:anonymized_date, options: [:only_year]]
   ])
 
@@ -18,6 +20,8 @@ defmodule EctoAnon.User do
     field(:last_sign_in_at, :utc_datetime)
 
     has_many(:comments, Comment, foreign_key: :author_id, references: :id)
+    embeds_one(:favorite_quote, EctoAnon.User.Quote)
+    embeds_many(:quotes, EctoAnon.User.Quote)
 
     many_to_many(
       :followers,
@@ -27,6 +31,21 @@ defmodule EctoAnon.User do
     )
 
     anonymized()
+  end
+end
+
+defmodule EctoAnon.User.Quote do
+  use Ecto.Schema
+  use EctoAnon.Schema
+
+  anon_schema([
+    :quote,
+    :author
+  ])
+
+  embedded_schema do
+    field(:quote, :string)
+    field(:author, :string)
   end
 end
 

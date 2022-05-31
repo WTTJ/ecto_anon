@@ -4,7 +4,8 @@ defmodule EctoAnon do
   """
 
   @doc """
-  Updates an Ecto struct with anonymized data based on its anon_fields declared in the struct schema.
+  Updates an Ecto struct with anonymized data based on its anon_schema declaration.
+  It also updates any embedded schema declared in anon_schema.
 
       defmodule User do
         use Ecto.Schema
@@ -31,16 +32,10 @@ defmodule EctoAnon do
 
   ## Options
 
-  <<<<<<< HEAD
     * `:cascade` - When set to `true`, allows ecto_anon to preload and anonymize
     all associations (and associations of these associations) automatically in cascade.
     Could be used to anonymize all data related a struct in a single call.
     Note that this won't traverse `belongs_to` associations to avoid infinite and cyclic anonymizations.
-  =======
-    * `:cascade` - When set to `true`, allows ecto-anon to preload and anonymize
-    all associations (and associations of these associations) automatically in cascade.
-    Could be used to anonymize all data related a struct in a single call.
-    Note that this won't traverse `belongs_to` associations.
     Default: false
 
     * `:log`- When set to `true`, it will set `anonymized` field when EctoAnon.run
@@ -85,7 +80,7 @@ defmodule EctoAnon do
     anon_fields = mod.__anon_fields__() |> Enum.map(fn {field, _} -> field end)
 
     associations =
-      (mod.__schema__(:associations) ++ mod.__schema__(:embeds))
+      mod.__schema__(:associations)
       |> Enum.filter(&(&1 in anon_fields and EctoAnon.Anonymizer.is_association?(mod, &1)))
 
     struct = repo.preload(struct, associations)

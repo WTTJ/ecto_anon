@@ -1,6 +1,6 @@
 defmodule EctoAnonTest do
   use ExUnit.Case, async: true
-  alias EctoAnon.{Repo, User, Comment, Comment.Quote}
+  alias EctoAnon.{Repo, User, Comment, User.Quote}
 
   defmodule UnknownStruct do
     defstruct name: "John", age: 27
@@ -14,7 +14,21 @@ defmodule EctoAnonTest do
           firstname: "Mick",
           lastname: "Rogers",
           last_sign_in_at: ~U[2021-01-03 00:00:00Z],
-          followers: []
+          followers: [],
+          favorite_quote: %Quote{
+            quote: "this is a quote",
+            author: "author"
+          },
+          quotes: [
+            %Quote{
+              quote: "this is a quote",
+              author: "author"
+            },
+            %Quote{
+              quote: "this is a quote",
+              author: "author"
+            }
+          ]
         }
         |> Repo.insert!()
 
@@ -24,7 +38,9 @@ defmodule EctoAnonTest do
           firstname: "Fred",
           lastname: "Duncan",
           last_sign_in_at: ~U[2023-03-20 00:00:00Z],
-          followers: []
+          followers: [],
+          favorite_quote: nil,
+          quotes: []
         }
         |> Repo.insert!()
 
@@ -34,7 +50,21 @@ defmodule EctoAnonTest do
           firstname: "Emilie",
           lastname: "Duncan",
           last_sign_in_at: ~U[2018-09-04 00:00:00Z],
-          followers: [fred]
+          followers: [fred],
+          favorite_quote: %Quote{
+            quote: "this is a quote",
+            author: "author"
+          },
+          quotes: [
+            %Quote{
+              quote: "this is a quote",
+              author: "author"
+            },
+            %Quote{
+              quote: "this is a quote",
+              author: "author"
+            }
+          ]
         }
         |> Repo.insert!()
 
@@ -44,20 +74,30 @@ defmodule EctoAnonTest do
           firstname: "John",
           lastname: "Doe",
           last_sign_in_at: ~U[2022-05-04 00:00:00Z],
-          followers: [mick, emilie]
+          followers: [mick, emilie],
+          favorite_quote: %Quote{
+            quote: "this is a quote",
+            author: "author"
+          },
+          quotes: [
+            %Quote{
+              quote: "this is a quote",
+              author: "author"
+            },
+            %Quote{
+              quote: "this is a quote",
+              author: "author"
+            }
+          ]
         }
         |> Repo.insert!()
 
-      comment =
-        %Comment{
-          content: "this is a comment",
-          tag: "tag",
-          author_id: user.id,
-          quote: %Quote{
-            quote: "this is a quote"
-          }
-        }
-        |> Repo.insert!()
+      %Comment{
+        content: "this is a comment",
+        tag: "tag",
+        author_id: user.id
+      }
+      |> Repo.insert!()
 
       {:ok, user: user, mick: mick, emilie: emilie}
     end
@@ -80,58 +120,86 @@ defmodule EctoAnonTest do
       mick: mick,
       emilie: emilie
     } do
-      comment =
-        %Comment{
-          content: "this is a comment",
-          tag: "tag",
-          author_id: user.id,
-          quote: %Quote{
-            quote: "this is a quote"
-          }
-        }
-        |> Repo.insert!()
-
-      assert {:ok, updated_user} =
-               Repo.get(Comment, comment.id)
-               |> EctoAnon.run(Repo, cascade: true)
+      assert {:ok, updated_user} = EctoAnon.run(user, Repo, cascade: true)
 
       assert %User{
                email: "redacted",
                firstname: "John",
                last_sign_in_at: ~U[2022-01-01 00:00:00Z],
-               lastname: "redacted"
+               lastname: "redacted",
+               favorite_quote: %Quote{
+                 quote: "redacted",
+                 author: "redacted"
+               },
+               quotes: [
+                 %Quote{
+                   quote: "redacted",
+                   author: "redacted"
+                 },
+                 %Quote{
+                   quote: "redacted",
+                   author: "redacted"
+                 }
+               ]
              } = updated_user
 
-      %Comment{
-        content: "this is a comment",
-        tag: "tag",
-        quote: %Quote{
-          quote: "redacted"
-        }
-      } = Repo.get_by(Comment, author_id: user.id)
+      assert %Comment{
+               content: "this is a comment",
+               tag: "tag"
+             } = Repo.get_by(Comment, author_id: user.id)
 
-      %User{
-        email: "redacted",
-        firstname: "Mick",
-        last_sign_in_at: ~U[2021-01-01 00:00:00Z],
-        lastname: "redacted",
-        followers: []
-      } = Repo.get(User, mick.id) |> Repo.preload(:followers)
+      assert %User{
+               email: "redacted",
+               firstname: "Mick",
+               last_sign_in_at: ~U[2021-01-01 00:00:00Z],
+               lastname: "redacted",
+               followers: [],
+               favorite_quote: %Quote{
+                 quote: "redacted",
+                 author: "redacted"
+               },
+               quotes: [
+                 %Quote{
+                   quote: "redacted",
+                   author: "redacted"
+                 },
+                 %Quote{
+                   quote: "redacted",
+                   author: "redacted"
+                 }
+               ]
+             } = Repo.get(User, mick.id) |> Repo.preload(:followers)
 
-      %User{
-        email: "redacted",
-        firstname: "Emilie",
-        last_sign_in_at: ~U[2018-01-01 00:00:00Z],
-        lastname: "redacted",
-        followers: [
-          %User{
-            email: "redacted",
-            firstname: "Fred",
-            last_sign_in_at: ~U[2023-01-01 00:00:00Z],
-            lastname: "redacted"
-          }
-        ]
-      } = Repo.get(User, emilie.id) |> Repo.preload(:followers)
+      assert %User{
+               email: "redacted",
+               firstname: "Emilie",
+               last_sign_in_at: ~U[2018-01-01 00:00:00Z],
+               lastname: "redacted",
+               favorite_quote: %Quote{
+                 quote: "redacted",
+                 author: "redacted"
+               },
+               followers: [
+                 %User{
+                   email: "redacted",
+                   firstname: "Fred",
+                   last_sign_in_at: ~U[2023-01-01 00:00:00Z],
+                   lastname: "redacted",
+                   favorite_quote: nil,
+                   quotes: []
+                 }
+               ],
+               quotes: [
+                 %Quote{
+                   quote: "redacted",
+                   author: "redacted"
+                 },
+                 %Quote{
+                   quote: "redacted",
+                   author: "redacted"
+                 }
+               ]
+             } = Repo.get(User, emilie.id) |> Repo.preload(:followers)
     end
   end
 end
