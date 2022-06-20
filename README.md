@@ -10,10 +10,11 @@
 
 ---
 
-## Table of Contents
+# Table of Contents
 
 - [Installation](#installation)
 - [Usage](#usage)
+  - [Schema](#schema)
   - [Migrations](#migrations)
   - [Options](#options)
 - [Contributing](#contributing)
@@ -24,7 +25,7 @@
 
 </br>
 
-## Installation
+# Installation
 
 Add `:ecto_anon` to your `mix.exs` dependencies:
 
@@ -36,7 +37,7 @@ def deps do
 end
 ```
 
-## Usage
+# Usage
 
 Define an `anon_schema` with all fields you want to be anonymized in your schema module
 
@@ -67,7 +68,7 @@ EctoAnon.run(user, Repo)
 {:ok, %User{name: "jane", age: 0, email: "redacted"}}
 ```
 
-### Schema
+## Schema
 
 Declare an `anon_schema` with all fields you want to anonymize (regular fields, associations, embeds)
 
@@ -92,7 +93,7 @@ end
 
 By adding a [anonymized field in your migration](#migrations), you can add `anonymized()` in your schema just like `timestamps()`.
 
-#### Default values
+### Default values
 
 By default, a field will be anonymized with a default value based on its type
 
@@ -115,7 +116,16 @@ By default, a field will be anonymized with a default value based on its type
 | binary_id           | no change                         |
 | binary              | no change                         |
 
-#### Native anonymization functions
+### Native anonymization functions
+
+```elixir
+anon_schema([
+    :firstname,
+    :lastname,
+    email: :anonymized_email,
+    birthdate: [:anonymized_date, options: [:only_year]]
+])
+```
 
 Natively, `ecto_anon` embeds differents functions to suit your needs
 
@@ -126,7 +136,22 @@ Natively, `ecto_anon` embeds differents functions to suit your needs
 | :anonymized_phone | Accepts string type By default, returns xx xx xx xx xx                                                                       |            |
 | :random_uuid      | Accepts string type By default, returns a random UUID                                                                        |            |
 
-### Migrations
+### Custom functions
+
+```elixir
+anon_schema([
+    address: &__MODULE__.anonymized_address/3
+])
+
+def anonymized_address(:map, %{} = address, _opts \\ []) do
+  address
+  |> Map.drop(["street"])
+end
+```
+
+You can also pass custom functions with the following signature: `function(type, value, options)`
+
+## Migrations
 
 By importing `EctoAnon.Migration` in your ecto migration file, you can add an `anonymized()` macro that will generate an `anonymized` boolean field in your table:
 
@@ -148,9 +173,9 @@ end
 
 Combined with `log` option when executing the anonymization, it will allow you to identify anonymized rows and exclude them in your queries with `EctoAnon.Query.not_anonymized/1`.
 
-### Options
+## Options
 
-#### cascade
+### cascade
 
 When set to `true`, allows ecto-anon to preload and anonymize
 all associations (and associations of these associations) automatically in cascade.
@@ -159,13 +184,13 @@ Note that this won't traverse `belongs_to` associations.
 
 Default: `false`
 
-#### log
+### log
 
 When set to `true`, it will set `anonymized` field when EctoAnon.run
 applies anonymization on a ressource.
 
 Default: `true`
 
-### License
+# License
 
 TBD
