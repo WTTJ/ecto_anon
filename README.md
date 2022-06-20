@@ -120,8 +120,6 @@ By default, a field will be anonymized with a default value based on its type
 
 ```elixir
 anon_schema([
-    :firstname,
-    :lastname,
     email: :anonymized_email,
     birthdate: [:anonymized_date, options: [:only_year]]
 ])
