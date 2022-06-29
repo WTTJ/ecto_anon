@@ -31,16 +31,10 @@ defmodule EctoAnon do
 
   ## Options
 
-  <<<<<<< HEAD
-    * `:cascade` - When set to `true`, allows ecto_anon to preload and anonymize
-    all associations (and associations of these associations) automatically in cascade.
-    Could be used to anonymize all data related a struct in a single call.
-    Note that this won't traverse `belongs_to` associations to avoid infinite and cyclic anonymizations.
-  =======
     * `:cascade` - When set to `true`, allows ecto-anon to preload and anonymize
     all associations (and associations of these associations) automatically in cascade.
     Could be used to anonymize all data related a struct in a single call.
-    Note that this won't traverse `belongs_to` associations.
+    Note that this won't traverse `belongs_to` associations to avoid infinite and cyclic anonymizations..
     Default: false
 
     * `:log`- When set to `true`, it will set `anonymized` field when EctoAnon.run

@@ -1,16 +1,16 @@
-<h1 align="center">
-  <br>
-  <strong>ecto_anon</strong>
-  <br>
-</h1>
+# ecto_anon
 
-<div align="center">
-  <strong>Simple way to handle data anonymization directly in your Ecto schemas</strong>
-</div>
+[![Module Version](https://img.shields.io/hexpm/v/ecto_anon.svg)](https://hex.pm/packages/ecto_anon)
+[![Hex Docs](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/ecto_anon/)
+[![Total Download](https://img.shields.io/hexpm/dt/ecto_anon.svg)](https://hex.pm/packages/ecto_anon)
+[![License](https://img.shields.io/hexpm/l/ecto_anon.svg)](https://github.com/WTTJ/ecto_anon/blob/master/LICENSE.md)
+[![Last Updated](https://img.shields.io/github/last-commit/WTTJ/ecto_anon.svg)](https://github.com/WTTJ/ecto_anon/commits/master)
+
+Simple way to handle data anonymization directly in your [Ecto](https://github.com/elixir-ecto/ecto) schemas
 
 ---
 
-# Table of Contents
+## Table of Contents
 
 - [Installation](#installation)
 - [Usage](#usage)
@@ -20,10 +20,6 @@
 - [Contributing](#contributing)
   - [Testing](#testing)
 - [License](#license)
-
----
-
-</br>
 
 # Installation
 
@@ -127,12 +123,12 @@ anon_schema([
 
 Natively, `ecto_anon` embeds differents functions to suit your needs
 
-| function          | role                                                                                                                         | options    |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| :anonymized_date  | Accepts all type of dates By default, returns default anonymized date With :only_year, will save only the year               | :only_year |
-| :anonymized_email | Accepts string type By default, returns [hash]@[hash].com With :partial, returns [first_letter]xxxx@[first_letter]xxxx.[tld] | :partial   |
-| :anonymized_phone | Accepts string type By default, returns xx xx xx xx xx                                                                       |            |
-| :random_uuid      | Accepts string type By default, returns a random UUID                                                                        |            |
+| function          | role                                               | options    |
+| ----------------- | -------------------------------------------------- | ---------- |
+| :anonymized_date  | Anonymizes partially or completely a date/datetime | :only_year |
+| :anonymized_email | Anonymizes partially or completely an email        | :partial   |
+| :anonymized_phone | Anonymizes a phone number (currently only FR)      |            |
+| :random_uuid      | Returns a random UUID                              |            |
 
 ### Custom functions
 
@@ -173,7 +169,7 @@ Combined with `log` option when executing the anonymization, it will allow you t
 
 ## Options
 
-### cascade
+### `cascade`
 
 When set to `true`, allows ecto-anon to preload and anonymize
 all associations (and associations of these associations) automatically in cascade.
@@ -182,13 +178,15 @@ Note that this won't traverse `belongs_to` associations.
 
 Default: `false`
 
-### log
+### `log`
 
 When set to `true`, it will set `anonymized` field when EctoAnon.run
 applies anonymization on a ressource.
 
 Default: `true`
 
-# License
+## Copyright and License
 
-TBD
+_Copyright (c) 2022 CORUSCANT (Welcome to the Jungle) - https://www.welcometothejungle.com_
+
+_This library is licensed under the [MIT](LICENSE.md)_

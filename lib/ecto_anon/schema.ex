@@ -16,12 +16,18 @@ defmodule EctoAnon.Schema do
     end
   end
 
+  @doc """
+  Macro to declare anonymizable fields
+  """
   defmacro anon_schema(fields_config) do
     quote do
       EctoAnon.Schema.__anon_schema__(__MODULE__, unquote(fields_config))
     end
   end
 
+  @doc """
+  Macro to create an anonymized field in the schema
+  """
   defmacro anonymized do
     quote do
       field(:anonymized, :boolean, default: false)
