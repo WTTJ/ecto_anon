@@ -5,6 +5,9 @@ defmodule EctoAnon.Functions do
 
   @callback run(atom(), any(), keyword()) :: any()
 
+  @doc """
+  Returns the anonymization function based on passed argument
+  """
   def get_function(atom) when is_atom(atom) do
     mod = get_module(atom)
 
@@ -12,7 +15,7 @@ defmodule EctoAnon.Functions do
   end
 
   @doc """
-  Returns the right anonymizing module.
+  Returns the anonymization module based on passed argument
   """
   def get_module(atom) when is_atom(atom) do
     Module.safe_concat(__MODULE__, constantize(atom))
