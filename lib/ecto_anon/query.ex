@@ -1,6 +1,19 @@
 defmodule EctoAnon.Query do
   import Ecto.Query
 
+  @spec apply(%{:fields => List.t(), :embeds => List.t()}, Ecto.Repo.t(), struct()) ::
+          {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
+  def apply(%{fields: fields, embeds: embeds}, repo, struct) do
+    changeset = Ecto.Changeset.change(struct, fields)
+
+    embeds
+    |> Enum.reduce(changeset, fn {field, data}, acc ->
+      acc
+      |> Ecto.Changeset.put_embed(field, data)
+    end)
+    |> repo.update()
+  end
+
   @spec apply(keyword(), Ecto.Repo.t(), struct()) ::
           {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
   def apply(data, repo, struct) do

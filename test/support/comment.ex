@@ -11,6 +11,7 @@ defmodule EctoAnon.Comment do
   schema "comments" do
     field(:content, :string)
     field(:tag, :string)
+
     belongs_to(:users, User, foreign_key: :author_id)
   end
 end
