@@ -8,12 +8,14 @@ defmodule EctoAnon.MixProject do
     [
       app: :ecto_anon,
       name: "ecto_anon",
+      description: "Data anonymization for your Ecto models",
       version: @version,
       elixir: "~> 1.12",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       elixirc_paths: elixirc_paths(Mix.env()),
       aliases: aliases(),
+      package: package(),
       docs: docs()
     ]
   end
@@ -43,6 +45,17 @@ defmodule EctoAnon.MixProject do
     [
       # Ensures database is reset before tests are run
       test: ["ecto.drop", "ecto.create --quiet", "ecto.migrate", "test"]
+    ]
+  end
+
+  defp package do
+    [
+      maintainers: ["Clément Quaresma"],
+      licenses: ["MIT"],
+      files: ~w(lib .formatter.exs mix.exs README* LICENSE*),
+      links: %{
+        "GitHub" => @source_url
+      }
     ]
   end
 
