@@ -3,7 +3,7 @@
 [![Module Version](https://img.shields.io/hexpm/v/ecto_anon.svg)](https://hex.pm/packages/ecto_anon)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/ecto_anon/)
 [![Total Download](https://img.shields.io/hexpm/dt/ecto_anon.svg)](https://hex.pm/packages/ecto_anon)
-[![License](https://img.shields.io/hexpm/l/ecto_anon.svg)](https://github.com/WTTJ/ecto_anon/blob/main/LICENSE.md)
+[![License](https://img.shields.io/hexpm/l/ecto_anon)](https://github.com/WTTJ/ecto_anon/blob/main/LICENSE.md)
 [![Last Updated](https://img.shields.io/github/last-commit/WTTJ/ecto_anon.svg)](https://github.com/WTTJ/ecto_anon/commits/main)
 
 Simple way to handle data anonymization directly in your [Ecto](https://github.com/elixir-ecto/ecto) schemas
@@ -17,7 +17,7 @@ Simple way to handle data anonymization directly in your [Ecto](https://github.c
   - [Schema](#schema)
   - [Migrations](#migrations)
   - [Options](#options)
-- [License](#license)
+- [License](#copyright-and-license)
 
 # Installation
 
