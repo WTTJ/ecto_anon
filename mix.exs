@@ -1,17 +1,20 @@
 defmodule EctoAnon.MixProject do
   use Mix.Project
 
-  @version "0.1.0"
+  @source_url "https://github.com/WTTJ/ecto_anon"
+  @version "0.4.0"
 
   def project do
     [
       app: :ecto_anon,
+      name: "ecto_anon",
       version: @version,
       elixir: "~> 1.12",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       elixirc_paths: elixirc_paths(Mix.env()),
-      aliases: aliases()
+      aliases: aliases(),
+      docs: docs()
     ]
   end
 
@@ -25,10 +28,11 @@ defmodule EctoAnon.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ecto, ">= 3.7.1"},
+      {:ecto_sql, "~> 3.0"},
       {:ecto_sqlite3, "~> 0.7.1", only: :test},
       {:jason, "~> 1.3", only: :test},
-      {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false}
+      {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false},
+      {:ex_doc, "~> 0.27", only: :dev, runtime: false}
     ]
   end
 
@@ -39,6 +43,22 @@ defmodule EctoAnon.MixProject do
     [
       # Ensures database is reset before tests are run
       test: ["ecto.drop", "ecto.create --quiet", "ecto.migrate", "test"]
+    ]
+  end
+
+  defp docs do
+    [
+      extras: [
+        "README.md": [title: "Overview"],
+        "LICENSE.md": [title: "License"]
+      ],
+      main: "readme",
+      source_url: @source_url,
+      homepage_url: @source_url,
+      formatters: ["html"],
+      groups_for_modules: [
+        "Custom functions": ~r/^EctoAnon.Functions.?/
+      ]
     ]
   end
 end
