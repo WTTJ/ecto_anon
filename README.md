@@ -14,9 +14,12 @@ Simple way to handle data anonymization directly in your [Ecto](https://github.c
 
 - [Installation](#installation)
 - [Usage](#usage)
-  - [Schema](#schema)
-  - [Migrations](#migrations)
   - [Options](#options)
+  - [Default values](#default-values)
+  - [Native functions](#native-functions)
+  - [Custom functions](#custom-functions)
+  - [Migrations](#migrations)
+  - [Filtering](#filtering)
 - [License](#copyright-and-license)
 
 # Installation
@@ -33,7 +36,7 @@ end
 
 # Usage
 
-Define an `anon_schema` with all fields you want to be anonymized in your schema module
+Define an `anon_schema` in your schema module and specify every fields you want to anonymize (regular fields, associations, embeds):
 
 ```elixir
 defmodule User do
@@ -41,37 +44,7 @@ defmodule User do
   use EctoAnon.Schema
 
   anon_schema [
-    :email
-  ]
-
-  schema "users" do
-    field :name, :string
-    field :age, :integer
-    field :email, :string
-  end
-end
-```
-
-Then use `EctoAnon.run` to apply anonymization on desired resource
-
-```elixir
-user = Repo.get(User, id)
-%User{name: "jane", age: 0, email: "jane@email.com"}
-
-EctoAnon.run(user, Repo)
-{:ok, %User{name: "jane", age: 0, email: "redacted"}}
-```
-
-## Schema
-
-Declare an `anon_schema` with all fields you want to anonymize (regular fields, associations, embeds)
-
-```elixir
-defmodule User do
-  use Ecto.Schema
-  use EctoAnon.Schema
-
-  anon_schema [
+    :name,
     :email
   ]
 
@@ -85,11 +58,126 @@ defmodule User do
 end
 ```
 
-By adding a [anonymized field in your migration](#migrations), you can add `anonymized()` in your schema just like `timestamps()`.
+Then use `EctoAnon.run` to apply anonymization on desired resource
 
-### Default values
+```elixir
+user = Repo.get(User, id)
+%User{name: "jane", age: 24, email: "jane@email.com"}
 
-By default, a field will be anonymized with a default value based on its type
+EctoAnon.run(user, Repo)
+{:ok, %User{name: "redacted", age: 24, email: "redacted"}}
+```
+
+## Options
+
+### `cascade`
+
+When set to `true`, it allows `ecto_anon` to preload and anonymize
+all associations (and associations of these associations) automatically in cascade.
+Could be used to anonymize all data related to a struct in a single call.
+
+Note that this won't traverse `belongs_to` associations.
+
+Default: `false`
+
+```elixir
+defmodule User do
+  use Ecto.Schema
+  use EctoAnon.Schema
+
+  anon_schema [
+    :lastname,
+    :email,
+    :followers,
+    :favorite_quote,
+    :quotes,
+    last_sign_in_at: [:anonymized_date, options: [:only_year]]
+  ]
+
+  schema "users" do
+    field(:firstname, :string)
+    field(:lastname, :string)
+    field(:email, :string)
+    field(:last_sign_in_at, :utc_datetime)
+
+    has_many(:comments, Comment, foreign_key: :author_id, references: :id)
+    embeds_one(:favorite_quote, Quote)
+    embeds_many(:quotes, Quote)
+
+    many_to_many(
+      :followers,
+      __MODULE__,
+      join_through: Follower,
+      join_keys: [follower_id: :id, followee_id: :id]
+    )
+
+    anonymized()
+  end
+end
+
+defmodule Quote do
+  use Ecto.Schema
+  use EctoAnon.Schema
+
+  anon_schema([
+    :quote,
+    :author
+  ])
+
+  embedded_schema do
+    field(:quote, :string)
+    field(:author, :string)
+  end
+end
+
+defmodule Follower do
+  use Ecto.Schema
+
+  schema "followers" do
+    field(:follower_id, :id)
+    field(:followee_id, :id)
+    timestamps()
+  end
+end
+```
+
+```elixir
+Repo.get(User, id)
+|> EctoAnon.run(Repo, cascade: true)
+
+{:ok,
+   %User{
+     email: "redacted",
+     firstname: "John",
+     last_sign_in_at: ~U[2022-01-01 00:00:00Z],
+     lastname: "redacted",
+     favorite_quote: %Quote{
+       quote: "redacted",
+       author: "redacted"
+     },
+     quotes: [
+       %Quote{
+         quote: "redacted",
+         author: "redacted"
+       },
+       %Quote{
+         quote: "redacted",
+         author: "redacted"
+       }
+     ]
+   }
+ }
+```
+
+### `log`
+
+When set to `true`, it will set `anonymized` field accordingly when `EctoAnon.run` is called on a ressource.
+
+Default: `true`
+
+## Default values
+
+By default, a field will be anonymized with those valuee, based on its type:
 
 | type                | value                             |
 | ------------------- | --------------------------------- |
@@ -110,12 +198,12 @@ By default, a field will be anonymized with a default value based on its type
 | binary_id           | no change                         |
 | binary              | no change                         |
 
-### Native anonymization functions
+## Native functions
 
 ```elixir
 anon_schema([
-    email: :anonymized_email,
-    birthdate: [:anonymized_date, options: [:only_year]]
+  email: :anonymized_email,
+  birthdate: [:anonymized_date, options: [:only_year]]
 ])
 ```
 
@@ -128,7 +216,7 @@ Natively, `ecto_anon` embeds differents functions to suit your needs
 | :anonymized_phone | Anonymizes a phone number (currently only FR)      |            |
 | :random_uuid      | Returns a random UUID                              |            |
 
-### Custom functions
+## Custom functions
 
 ```elixir
 anon_schema([
@@ -165,25 +253,22 @@ end
 
 Combined with `log` option when executing the anonymization, it will allow you to identify anonymized rows and exclude them in your queries with `EctoAnon.Query.not_anonymized/1`.
 
-## Options
+## Filtering
 
-### `cascade`
+As you can create an [anonymized field in your migration](#migrations), you can add `anonymized()` in your schema, just like `timestamps()`.
 
-When set to `true`, allows ecto-anon to preload and anonymize
-all associations (and associations of these associations) automatically in cascade.
-Could be used to anonymize all data related a struct in a single call.
-Note that this won't traverse `belongs_to` associations.
+By adding this field, you can use it to filter your resources and exclude anonymized data easily:
 
-Default: `false`
+```elixir
+import EctoAnon.Query
+import Ecto.Query
 
-### `log`
+from(u in User, select: u)
+|> not_anonymized()
+|> Repo.all()
+```
 
-When set to `true`, it will set `anonymized` field when EctoAnon.run
-applies anonymization on a ressource.
-
-Default: `true`
-
-## Copyright and License
+# Copyright and License
 
 _Copyright (c) 2022 CORUSCANT (Welcome to the Jungle) - https://www.welcometothejungle.com_
 
