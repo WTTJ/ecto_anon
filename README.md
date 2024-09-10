@@ -29,7 +29,7 @@ Add `:ecto_anon` to your `mix.exs` dependencies:
 ```elixir
 def deps do
   [
-    {:ecto_anon, "~> 0.5.0"}
+    {:ecto_anon, "~> 0.6.0"}
   ]
 end
 ```
