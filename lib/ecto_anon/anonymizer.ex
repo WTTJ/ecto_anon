@@ -76,7 +76,7 @@ defmodule EctoAnon.Anonymizer do
 
   def is_embed?(mod, field) do
     case mod.__schema__(:type, field) do
-      {_, Ecto.Embedded, %Ecto.Embedded{}} ->
+      {_, {Ecto.Embedded, %Ecto.Embedded{}}} ->
         true
 
       {_, {_, Ecto.Embedded, %Ecto.Embedded{}}} ->
