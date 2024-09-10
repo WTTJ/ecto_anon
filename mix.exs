@@ -2,7 +2,7 @@ defmodule EctoAnon.MixProject do
   use Mix.Project
 
   @source_url "https://github.com/WTTJ/ecto_anon"
-  @version "0.5.0"
+  @version "0.6.0"
 
   def project do
     [
@@ -10,7 +10,7 @@ defmodule EctoAnon.MixProject do
       name: "ecto_anon",
       description: "Data anonymization for your Ecto models",
       version: @version,
-      elixir: "~> 1.12",
+      elixir: "~> 1.16",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       elixirc_paths: elixirc_paths(Mix.env()),
