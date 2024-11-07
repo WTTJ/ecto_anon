@@ -1,0 +1,41 @@
+name: Publish package to Hex.pm
+
+on:
+  release:
+    types: [published, released]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    if: "!github.event.release.prerelease"
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Elixir
+      uses: erlef/setup-beam@v1
+      with:
+        elixir-version: '1.17.2'
+        otp-version: '26.2.5.2'
+
+    - name: Check version consistency
+      run: |
+          MIX_VERSION=$(mix run -e 'IO.puts Mix.Project.config[:version]')
+          RELEASE_VERSION=${{ github.event.release.tag_name }}
+          RELEASE_VERSION=${RELEASE_VERSION#v}
+
+          if [ "$MIX_VERSION" != "$RELEASE_VERSION" ]; then
+            echo "Version mismatch: mix.exs version ($MIX_VERSION) != release version ($RELEASE_VERSION)"
+            exit 1
+          fi
+
+    - name: Install dependencies
+      run: |
+        mix deps.get
+
+    - name: Publish to Hex.pm
+      env:
+        HEX_API_KEY: ${{ secrets.HEXPM_PUBLIC_PACKAGES_KEY }}
+      run: |
+        mix hex.build
+        mix hex.publish --yes
