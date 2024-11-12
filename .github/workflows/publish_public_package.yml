@@ -2,7 +2,7 @@ name: Publish package to Hex.pm
 
 on:
   release:
-    types: [published, released]
+    types: [released]
 
 jobs:
   publish:
@@ -18,6 +18,14 @@ jobs:
         elixir-version: '1.17.2'
         otp-version: '26.2.5.2'
 
+    - name: Install dependencies
+      run: |
+        mix deps.get
+
+    - name: Compile
+      run: |
+        mix compile
+
     - name: Check version consistency
       run: |
           MIX_VERSION=$(mix run -e 'IO.puts Mix.Project.config[:version]')
@@ -29,13 +37,8 @@ jobs:
             exit 1
           fi
 
-    - name: Install dependencies
-      run: |
-        mix deps.get
-
     - name: Publish to Hex.pm
       env:
         HEX_API_KEY: ${{ secrets.HEXPM_PUBLIC_PACKAGES_KEY }}
       run: |
-        mix hex.build
         mix hex.publish --yes
