@@ -30,11 +30,11 @@ defmodule EctoAnon.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ecto_sql, "3.13.5"},
-      {:ecto_sqlite3, "0.22.0", only: :test},
-      {:jason, "1.4.4", only: :test},
-      {:mix_test_watch, "1.4.0", only: [:dev, :test], runtime: false},
-      {:ex_doc, "0.40.1", only: :dev, runtime: false}
+      {:ecto_sql, "~> 3.12"},
+      {:ecto_sqlite3, "~> 0.17", only: :test},
+      {:jason, "~> 1.3", only: :test},
+      {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false},
+      {:ex_doc, "~> 0.27", only: :dev, runtime: false}
     ]
   end
 
