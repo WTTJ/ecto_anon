@@ -31,7 +31,7 @@ defmodule EctoAnon.MixProject do
   defp deps do
     [
       {:ecto_sql, "~> 3.12"},
-      {:ecto_sqlite3, "~> 0.17", only: :test},
+      {:ecto_sqlite3, "~> 0.24", only: :test},
       {:jason, "~> 1.3", only: :test},
       {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.40", only: :dev, runtime: false}
