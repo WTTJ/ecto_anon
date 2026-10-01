@@ -2,7 +2,7 @@ defmodule EctoAnon.MixProject do
   use Mix.Project
 
   @source_url "https://github.com/WTTJ/ecto_anon"
-  @version "0.6.2"
+  @version "0.6.3"
 
   def project do
     [
