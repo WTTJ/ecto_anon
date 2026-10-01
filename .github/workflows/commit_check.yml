@@ -1,0 +1,26 @@
+name: commit-check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  check-commits:
+    runs-on: ubuntu-latest
+    container:
+      image: commitizen/commitizen:4.19.0
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set safe directory
+        run: git config --global --add safe.directory "$PWD"
+
+      - name: Check conventional commits
+        run: cz check --rev-range ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}
