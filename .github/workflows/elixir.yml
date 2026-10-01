@@ -2,9 +2,7 @@ name: Elixir CI
 
 on:
   push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
 
 jobs:
   build:
@@ -14,11 +12,31 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        otp: ["25.x", "26.x", "27.x"]
-        elixir: ["1.16.x", "1.17.x", "1.18.x"]
+        otp: ["25.x", "26.x", "27.x", "28.x", "29.x"]
+        elixir: ["1.16.x", "1.17.x", "1.18.x", "1.19.x", "1.20.x"]
         exclude:
           - elixir: 1.16.x
             otp: 27.x
+          - elixir: 1.16.x
+            otp: 28.x
+          - elixir: 1.16.x
+            otp: 29.x
+          - elixir: 1.17.x
+            otp: 28.x
+          - elixir: 1.17.x
+            otp: 29.x
+          - elixir: 1.18.x
+            otp: 28.x
+          - elixir: 1.18.x
+            otp: 29.x
+          - elixir: 1.19.x
+            otp: 25.x
+          - elixir: 1.19.x
+            otp: 29.x
+          - elixir: 1.20.x
+            otp: 25.x
+          - elixir: 1.20.x
+            otp: 26.x
     steps:
       - uses: actions/checkout@v7
       - name: Set up Elixir
@@ -26,6 +44,8 @@ jobs:
         with:
           elixir-version: ${{ matrix.elixir }}
           otp-version: ${{ matrix.otp }}
+        env:
+          ImageOS: ubuntu24
       - name: Restore dependencies cache
         uses: actions/cache@v6
         with:
