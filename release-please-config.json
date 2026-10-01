@@ -1,0 +1,20 @@
+{
+  "release-type": "elixir",
+  "include-v-in-tag": true,
+  "changelog-sections": [
+    { "type": "feat", "section": "Features" },
+    { "type": "fix", "section": "Bug Fixes" },
+    { "type": "chore", "section": "Chores" },
+    { "type": "ci", "section": "CI/CD" },
+    { "type": "build", "section": "Build" },
+    { "type": "docs", "section": "Documentation" },
+    { "type": "refactor", "section": "Refactors" },
+    { "type": "perf", "section": "Performance" },
+    { "type": "style", "section": "Styling" },
+    { "type": "test", "section": "Tests" },
+    { "type": "revert", "section": "Reverts" }
+  ],
+  "packages": {
+    ".": {}
+  }
+}
