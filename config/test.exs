@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 config :ecto_anon, ecto_repos: [EctoAnon.Repo]
 
